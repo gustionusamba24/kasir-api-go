@@ -113,6 +113,48 @@ func main() {
 	// Swagger documentation route
 	mux.HandleFunc("/swagger/", httpSwagger.WrapHandler)
 
+	// Root route - Welcome page
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/" {
+			http.NotFound(w, r)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+
+		port := os.Getenv("PORT")
+		if port == "" {
+			port = "8080"
+		}
+
+		response := fmt.Sprintf(`{
+  "message": "Welcome to Kasir API - Point of Sale System",
+  "version": "1.0",
+  "status": "running",
+  "documentation": "http://localhost:%s/swagger/index.html",
+  "endpoints": {
+    "categories": {
+      "getAll": "GET http://localhost:%s/categories",
+      "getById": "GET http://localhost:%s/categories/{id}",
+      "create": "POST http://localhost:%s/categories",
+      "update": "PUT http://localhost:%s/categories/{id}",
+      "delete": "DELETE http://localhost:%s/categories/{id}"
+    },
+    "products": {
+      "getAll": "GET http://localhost:%s/products",
+      "getByCategory": "GET http://localhost:%s/products?category_id={id}",
+      "getById": "GET http://localhost:%s/products/{id}",
+      "create": "POST http://localhost:%s/products",
+      "update": "PUT http://localhost:%s/products/{id}",
+      "delete": "DELETE http://localhost:%s/products/{id}"
+    }
+  }
+}`, port, port, port, port, port, port, port, port, port, port, port, port)
+
+		fmt.Fprint(w, response)
+	})
+
 	// Get port from environment or use default
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -121,7 +163,6 @@ func main() {
 
 	// Start the server
 	addr := fmt.Sprintf(":%s", port)
-	log.Printf("Server starting on port %s", port)
 	if err := http.ListenAndServe(addr, mux); err != nil {
 		log.Fatalf("Server failed to start: %v", err)
 	}
