@@ -223,7 +223,9 @@ kasir-api-go/
 ├── go.mod                         # Go module dependencies
 ├── go.sum                         # Go module checksums
 ├── README.md                      # This file
-└── SWAGGER.md                     # Swagger documentation guide
+├── SWAGGER.md                     # Swagger documentation guide
+├── seed_data.sql                  # Sample data for testing
+└── Kasir_API.postman_collection.json  # Postman collection for API testing
 ```
 
 ### Architecture Explanation
@@ -295,13 +297,6 @@ Before running this project, ensure you have the following installed:
    touch .env
    ```
 
-   Add your database configuration to `.env`:
-
-   ```env
-   DB_URL=postgresql://username:password@host:port/database?sslmode=require
-   PORT=8080
-   ```
-
    Replace with your actual PostgreSQL credentials:
    - `username`: Your database username
    - `password`: Your database password
@@ -338,13 +333,25 @@ Before running this project, ensure you have the following installed:
    CREATE INDEX idx_products_category_id ON products(category_id);
    ```
 
-5. **Install Swagger CLI (Optional, for regenerating docs)**
+5. **Load sample data (Optional)**
+
+   To populate your database with test data for development/testing:
+
+   ```bash
+   psql -d your_database_name -f seed_data.sql
+   ```
+
+   Or using a PostgreSQL client, execute the SQL script in `seed_data.sql`. This will add:
+   - 5 sample categories (Electronics, Food & Beverages, Clothing, Books, Home & Garden)
+   - 25+ sample products across different categories
+
+6. **Install Swagger CLI (Optional, for regenerating docs)**
 
    ```bash
    go install github.com/swaggo/swag/cmd/swag@latest
    ```
 
-6. **Run the application**
+7. **Run the application**
 
    ```bash
    cd cmd
@@ -358,7 +365,7 @@ Before running this project, ensure you have the following installed:
    ./kasir-api
    ```
 
-7. **Verify the server is running**
+8. **Verify the server is running**
 
    You should see output similar to:
 
@@ -367,12 +374,59 @@ Before running this project, ensure you have the following installed:
    2026/01/25 15:00:00 Server starting on port 8080
    ```
 
-8. **Access the API**
+9. **Access the API**
    - **API Base URL**: http://localhost:8080
    - **Swagger UI**: http://localhost:8080/swagger/index.html
    - **Test endpoint**: http://localhost:8080/categories
 
-### Quick Test
+## 🧪 Testing the API
+
+### Using Postman
+
+A complete Postman collection is included in this repository for easy API testing.
+
+#### Import Postman Collection
+
+1. **Download and install** [Postman](https://www.postman.com/downloads/)
+
+2. **Import the collection**:
+   - Open Postman
+   - Click "Import" button
+   - Select `Kasir_API.postman_collection.json` from the project root
+   - The collection will be added to your workspace
+
+3. **Configure environment** (Optional):
+   - The collection uses `{{base_url}}` variable set to `http://localhost:8080` by default
+   - To change the base URL, edit the collection variable or create a Postman environment
+
+4. **Start testing**:
+   - Make sure your server is running (`go run cmd/main.go`)
+   - Execute requests from the collection
+   - All CRUD operations for Categories and Products are included
+
+#### Postman Collection Contents
+
+The collection includes:
+
+**Categories Endpoints:**
+
+- Get All Categories
+- Get Category by ID
+- Create Category
+- Update Category
+- Delete Category
+
+**Products Endpoints:**
+
+- Get All Products
+- Get Products by Category (with query parameter)
+- Get Product by ID
+- Create Product (with category)
+- Create Product (without category)
+- Update Product
+- Delete Product
+
+### Using cURL
 
 Test if the API is working by creating a category:
 
@@ -385,9 +439,18 @@ curl -X POST http://localhost:8080/categories \
   }'
 ```
 
-Or open http://localhost:8080/swagger/index.html in your browser for interactive API testing.
+Or open http://localhost:8080/swagger/index.html in your browser for interactive API testing with Swagger UI.
 
-### Development
+### Sample Test Data
+
+The `seed_data.sql` file contains sample data with:
+
+- **5 Categories**: Electronics, Food & Beverages, Clothing, Books, Home & Garden
+- **25+ Products**: Various products across different categories with realistic prices and stock levels
+
+This data is perfect for testing all API endpoints without manually creating entries.
+
+## 🛠️ Development
 
 **Running in development mode:**
 
@@ -436,4 +499,3 @@ Interactive API documentation is available via Swagger UI once the server is run
 **Swagger UI**: http://localhost:8080/swagger/index.html
 
 For detailed Swagger documentation guide, see [SWAGGER.md](SWAGGER.md)
-
