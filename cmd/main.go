@@ -10,9 +10,15 @@ import (
 	"github.com/gustionusamba24/kasir-api-go/internal/controllers"
 	"github.com/gustionusamba24/kasir-api-go/internal/repositories/impl"
 	serviceImpl "github.com/gustionusamba24/kasir-api-go/internal/services/impl"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	// Load .env file
+	if err := godotenv.Load("../.env"); err != nil {
+		log.Printf("Warning: .env file not found: %v", err)
+	}
+
 	// Connect to the database
 	db, err := config.ConnectDatabase()
 	if err != nil {
