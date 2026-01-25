@@ -437,18 +437,3 @@ Interactive API documentation is available via Swagger UI once the server is run
 
 For detailed Swagger documentation guide, see [SWAGGER.md](SWAGGER.md)
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📝 License
-
-This project is licensed under the Apache License 2.0 - see the LICENSE file for details.
-
-## 📧 Contact
-
-For support or questions, please contact: support@kasir-api.com
-
----
-
-**Happy Coding! 🚀**
