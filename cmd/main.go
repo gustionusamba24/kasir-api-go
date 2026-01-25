@@ -21,12 +21,12 @@ func main() {
 	defer db.Close()
 
 	// Initialize repositories
-	categoryRepo := impl.NewCategoryRepositoryImpl(db)
-	productRepo := impl.NewProductRepositoryImpl(db)
+	categoryRepo := impl.NewCategoryRepository(db)
+	productRepo := impl.NewProductRepository(db)
 
 	// Initialize services
-	categoryService := serviceImpl.NewCategoryServiceImpl(categoryRepo)
-	productService := serviceImpl.NewProductServiceImpl(productRepo, categoryRepo)
+	categoryService := serviceImpl.NewCategoryService(categoryRepo)
+	productService := serviceImpl.NewProductService(productRepo, categoryRepo)
 
 	// Initialize controllers
 	categoryController := controllers.NewCategoryController(categoryService)
