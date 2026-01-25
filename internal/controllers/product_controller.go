@@ -20,7 +20,18 @@ func NewProductController(service services.ProductService) *ProductController {
 	}
 }
 
-// GetAll handles GET /products - retrieve all products
+// GetAll godoc
+// @Summary      Get all products
+// @Description  Retrieve a list of all products, optionally filtered by category ID
+// @Tags         products
+// @Accept       json
+// @Produce      json
+// @Param        category_id  query     int  false  "Filter by Category ID"
+// @Success      200          {object}  map[string]interface{}  "success response with products data"
+// @Failure      400          {object}  map[string]interface{}  "invalid category ID"
+// @Failure      404          {object}  map[string]interface{}  "category not found"
+// @Failure      500          {object}  map[string]interface{}  "internal server error"
+// @Router       /products [get]
 func (c *ProductController) GetAll(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -63,7 +74,18 @@ func (c *ProductController) GetAll(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// GetByID handles GET /products/{id} - retrieve a product by ID
+// GetByID godoc
+// @Summary      Get a product by ID
+// @Description  Retrieve a single product by its ID
+// @Tags         products
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "Product ID"
+// @Success      200  {object}  map[string]interface{}  "success response with product data"
+// @Failure      400  {object}  map[string]interface{}  "invalid product ID"
+// @Failure      404  {object}  map[string]interface{}  "product not found"
+// @Failure      500  {object}  map[string]interface{}  "internal server error"
+// @Router       /products/{id} [get]
 func (c *ProductController) GetByID(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -90,7 +112,18 @@ func (c *ProductController) GetByID(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// Create handles POST /products - create a new product
+// Create godoc
+// @Summary      Create a new product
+// @Description  Create a new product with the provided data
+// @Tags         products
+// @Accept       json
+// @Produce      json
+// @Param        product  body      dtos.ProductCreateRequestDto  true  "Product data"
+// @Success      201      {object}  map[string]interface{}  "success response with created product"
+// @Failure      400      {object}  map[string]interface{}  "invalid request payload"
+// @Failure      404      {object}  map[string]interface{}  "category not found"
+// @Failure      500      {object}  map[string]interface{}  "internal server error"
+// @Router       /products [post]
 func (c *ProductController) Create(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -120,7 +153,19 @@ func (c *ProductController) Create(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// Update handles PUT /products/{id} - update an existing product
+// Update godoc
+// @Summary      Update a product
+// @Description  Update an existing product by its ID
+// @Tags         products
+// @Accept       json
+// @Produce      json
+// @Param        id       path      int  true  "Product ID"
+// @Param        product  body      dtos.ProductUpdateRequestDto  true  "Product data"
+// @Success      200      {object}  map[string]interface{}  "success response with updated product"
+// @Failure      400      {object}  map[string]interface{}  "invalid request"
+// @Failure      404      {object}  map[string]interface{}  "product not found"
+// @Failure      500      {object}  map[string]interface{}  "internal server error"
+// @Router       /products/{id} [put]
 func (c *ProductController) Update(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -157,7 +202,18 @@ func (c *ProductController) Update(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// Delete handles DELETE /products/{id} - delete a product
+// Delete godoc
+// @Summary      Delete a product
+// @Description  Delete a product by its ID
+// @Tags         products
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "Product ID"
+// @Success      200  {object}  map[string]interface{}  "success response"
+// @Failure      400  {object}  map[string]interface{}  "invalid product ID"
+// @Failure      404  {object}  map[string]interface{}  "product not found"
+// @Failure      500  {object}  map[string]interface{}  "internal server error"
+// @Router       /products/{id} [delete]
 func (c *ProductController) Delete(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 

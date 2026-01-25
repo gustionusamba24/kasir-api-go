@@ -1,0 +1,437 @@
+basePath: /
+definitions:
+  dtos.CategoryCreateRequestDto:
+    properties:
+      description:
+        maxLength: 500
+        type: string
+      name:
+        maxLength: 100
+        minLength: 3
+        type: string
+    required:
+    - name
+    type: object
+  dtos.CategoryUpdateRequestDto:
+    properties:
+      description:
+        maxLength: 500
+        type: string
+      name:
+        maxLength: 100
+        minLength: 3
+        type: string
+    required:
+    - name
+    type: object
+  dtos.ProductCreateRequestDto:
+    properties:
+      category_id:
+        type: integer
+      name:
+        maxLength: 100
+        minLength: 3
+        type: string
+      price:
+        type: number
+      stock:
+        minimum: 0
+        type: integer
+    required:
+    - name
+    - price
+    - stock
+    type: object
+  dtos.ProductUpdateRequestDto:
+    properties:
+      category_id:
+        type: integer
+      name:
+        maxLength: 100
+        minLength: 3
+        type: string
+      price:
+        type: number
+      stock:
+        minimum: 0
+        type: integer
+    required:
+    - name
+    - price
+    - stock
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@kasir-api.com
+    name: API Support
+  description: A simple POS (Point of Sale) API with CRUD operations for categories
+    and products
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Kasir API
+  version: "1.0"
+paths:
+  /categories:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of all categories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success response with categories data
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get all categories
+      tags:
+      - categories
+    post:
+      consumes:
+      - application/json
+      description: Create a new category with the provided data
+      parameters:
+      - description: Category data
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CategoryCreateRequestDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: success response with created category
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: invalid request payload
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new category
+      tags:
+      - categories
+  /categories/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a category by its ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success response
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: invalid category ID
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: category not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a category
+      tags:
+      - categories
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a single category by its ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success response with category data
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: invalid category ID
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: category not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get a category by ID
+      tags:
+      - categories
+    put:
+      consumes:
+      - application/json
+      description: Update an existing category by its ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Category data
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CategoryUpdateRequestDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success response with updated category
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: category not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a category
+      tags:
+      - categories
+  /products:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of all products, optionally filtered by category
+        ID
+      parameters:
+      - description: Filter by Category ID
+        in: query
+        name: category_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success response with products data
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: invalid category ID
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: category not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get all products
+      tags:
+      - products
+    post:
+      consumes:
+      - application/json
+      description: Create a new product with the provided data
+      parameters:
+      - description: Product data
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.ProductCreateRequestDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: success response with created product
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: invalid request payload
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: category not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new product
+      tags:
+      - products
+  /products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a product by its ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success response
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: invalid product ID
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: product not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a product
+      tags:
+      - products
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a single product by its ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success response with product data
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: invalid product ID
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: product not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get a product by ID
+      tags:
+      - products
+    put:
+      consumes:
+      - application/json
+      description: Update an existing product by its ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Product data
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.ProductUpdateRequestDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success response with updated product
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: product not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a product
+      tags:
+      - products
+schemes:
+- http
+- https
+swagger: "2.0"

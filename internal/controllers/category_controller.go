@@ -19,7 +19,15 @@ func NewCategoryController(service services.CategoryService) *CategoryController
 	}
 }
 
-// GetAll handles GET /categories - retrieve all categories
+// GetAll godoc
+// @Summary      Get all categories
+// @Description  Retrieve a list of all categories
+// @Tags         categories
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  map[string]interface{}  "success response with categories data"
+// @Failure      500  {object}  map[string]interface{}  "internal server error"
+// @Router       /categories [get]
 func (c *CategoryController) GetAll(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -35,7 +43,18 @@ func (c *CategoryController) GetAll(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// GetByID handles GET /categories/{id} - retrieve a category by ID
+// GetByID godoc
+// @Summary      Get a category by ID
+// @Description  Retrieve a single category by its ID
+// @Tags         categories
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "Category ID"
+// @Success      200  {object}  map[string]interface{}  "success response with category data"
+// @Failure      400  {object}  map[string]interface{}  "invalid category ID"
+// @Failure      404  {object}  map[string]interface{}  "category not found"
+// @Failure      500  {object}  map[string]interface{}  "internal server error"
+// @Router       /categories/{id} [get]
 func (c *CategoryController) GetByID(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -62,7 +81,17 @@ func (c *CategoryController) GetByID(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// Create handles POST /categories - create a new category
+// Create godoc
+// @Summary      Create a new category
+// @Description  Create a new category with the provided data
+// @Tags         categories
+// @Accept       json
+// @Produce      json
+// @Param        category  body      dtos.CategoryCreateRequestDto  true  "Category data"
+// @Success      201       {object}  map[string]interface{}  "success response with created category"
+// @Failure      400       {object}  map[string]interface{}  "invalid request payload"
+// @Failure      500       {object}  map[string]interface{}  "internal server error"
+// @Router       /categories [post]
 func (c *CategoryController) Create(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -88,7 +117,19 @@ func (c *CategoryController) Create(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// Update handles PUT /categories/{id} - update an existing category
+// Update godoc
+// @Summary      Update a category
+// @Description  Update an existing category by its ID
+// @Tags         categories
+// @Accept       json
+// @Produce      json
+// @Param        id        path      int  true  "Category ID"
+// @Param        category  body      dtos.CategoryUpdateRequestDto  true  "Category data"
+// @Success      200       {object}  map[string]interface{}  "success response with updated category"
+// @Failure      400       {object}  map[string]interface{}  "invalid request"
+// @Failure      404       {object}  map[string]interface{}  "category not found"
+// @Failure      500       {object}  map[string]interface{}  "internal server error"
+// @Router       /categories/{id} [put]
 func (c *CategoryController) Update(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -125,7 +166,18 @@ func (c *CategoryController) Update(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// Delete handles DELETE /categories/{id} - delete a category
+// Delete godoc
+// @Summary      Delete a category
+// @Description  Delete a category by its ID
+// @Tags         categories
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "Category ID"
+// @Success      200  {object}  map[string]interface{}  "success response"
+// @Failure      400  {object}  map[string]interface{}  "invalid category ID"
+// @Failure      404  {object}  map[string]interface{}  "category not found"
+// @Failure      500  {object}  map[string]interface{}  "internal server error"
+// @Router       /categories/{id} [delete]
 func (c *CategoryController) Delete(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
