@@ -33,9 +33,14 @@ import (
 // @schemes http https
 
 func main() {
-	// Load .env file
-	if err := godotenv.Load("../.env"); err != nil {
-		log.Printf("Warning: .env file not found: %v", err)
+	// Load .env file - try multiple paths for flexibility
+	// This is optional as Railway/production will use environment variables
+	if err := godotenv.Load(); err != nil {
+		if err := godotenv.Load("../.env"); err != nil {
+			if err := godotenv.Load(".env"); err != nil {
+				log.Printf("No .env file loaded (this is normal in production)")
+			}
+		}
 	}
 
 	// Connect to the database
