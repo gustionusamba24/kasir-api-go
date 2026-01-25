@@ -16,6 +16,7 @@ type productServiceImpl struct {
 	mapper             *mappers.ProductMapper
 }
 
+// NewProductService creates a new instance of ProductService
 func NewProductService(
 	repository repositories.ProductRepository,
 	categoryRepository repositories.CategoryRepository,

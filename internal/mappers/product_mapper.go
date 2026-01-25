@@ -40,14 +40,14 @@ func (m *ProductMapper) ToDtoList(products []entities.Product) []dtos.ProductDto
 		return nil
 	}
 
-	dtos := make([]dtos.ProductDto, len(products))
+	result := make([]dtos.ProductDto, len(products))
 	for i, product := range products {
 		dto := m.ToDto(&product)
 		if dto != nil {
-			dtos[i] = *dto
+			result[i] = *dto
 		}
 	}
-	return dtos
+	return result
 }
 
 // ToCreateRequest converts ProductCreateRequestDto to ProductCreateRequest

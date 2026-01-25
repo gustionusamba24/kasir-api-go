@@ -16,7 +16,6 @@ type CategoryMapper struct{}
 // @Mapping(target = "description", source = "description")
 // @Mapping(target = "createdAt", source = "createdAt")
 // @Mapping(target = "updatedAt", source = "updatedAt")
-
 func (m *CategoryMapper) ToDto(category *entities.Category) *dtos.CategoryDto {
 	if category == nil {
 		return nil
@@ -37,14 +36,14 @@ func (m *CategoryMapper) ToDtoList(categories []entities.Category) []dtos.Catego
 		return nil
 	}
 
-	dtos := make([]dtos.CategoryDto, len(categories))
+	result := make([]dtos.CategoryDto, len(categories))
 	for i, category := range categories {
 		dto := m.ToDto(&category)
 		if dto != nil {
-			dtos[i] = *dto
+			result[i] = *dto
 		}
 	}
-	return dtos
+	return result
 }
 
 // ToCreateRequest converts CategoryCreateRequestDto to CategoryCreateRequest
