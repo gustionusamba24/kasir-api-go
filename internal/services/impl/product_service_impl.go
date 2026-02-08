@@ -72,6 +72,16 @@ func (s *productServiceImpl) GetByCategoryID(ctx context.Context, categoryID int
 	return s.mapper.ToDtoList(products), nil
 }
 
+// Search searches products by name and active status
+func (s *productServiceImpl) Search(ctx context.Context, name string, active *bool) ([]dtos.ProductDto, error) {
+	products, err := s.repository.FindByFilters(ctx, name, active)
+	if err != nil {
+		return nil, fmt.Errorf("failed to search products: %w", err)
+	}
+
+	return s.mapper.ToDtoList(products), nil
+}
+
 // Create creates a new product
 func (s *productServiceImpl) Create(ctx context.Context, dto *dtos.ProductCreateRequestDto) (*dtos.ProductDto, error) {
 	if dto == nil {

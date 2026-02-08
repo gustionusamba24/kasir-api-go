@@ -22,21 +22,48 @@ func NewProductController(service services.ProductService) *ProductController {
 
 // GetAll godoc
 // @Summary      Get all products
-// @Description  Retrieve a list of all products, optionally filtered by category ID
+// @Description  Retrieve a list of all products, optionally filtered by category ID, name, or active status
 // @Tags         products
 // @Accept       json
 // @Produce      json
-// @Param        category_id  query     int  false  "Filter by Category ID"
+// @Param        category_id  query     int     false  "Filter by Category ID"
+// @Param        name         query     string  false  "Search by product name (case-insensitive partial match)"
+// @Param        active       query     bool    false  "Filter by active status"
 // @Success      200          {object}  map[string]interface{}  "success response with products data"
-// @Failure      400          {object}  map[string]interface{}  "invalid category ID"
+// @Failure      400          {object}  map[string]interface{}  "invalid parameter"
 // @Failure      404          {object}  map[string]interface{}  "category not found"
 // @Failure      500          {object}  map[string]interface{}  "internal server error"
 // @Router       /products [get]
 func (c *ProductController) GetAll(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	// Check if filtering by category
+	// Get query parameters
 	categoryIDStr := r.URL.Query().Get("category_id")
+	nameQuery := r.URL.Query().Get("name")
+	activeStr := r.URL.Query().Get("active")
+
+	// Check if searching by name or active status
+	if nameQuery != "" || activeStr != "" {
+		var activePtr *bool
+		if activeStr != "" {
+			activeBool := activeStr == "true"
+			activePtr = &activeBool
+		}
+
+		products, err := c.service.Search(ctx, nameQuery, activePtr)
+		if err != nil {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		respondWithJSON(w, http.StatusOK, map[string]interface{}{
+			"success": true,
+			"data":    products,
+		})
+		return
+	}
+
+	// Check if filtering by category
 	if categoryIDStr != "" {
 		categoryID, err := strconv.Atoi(categoryIDStr)
 		if err != nil {

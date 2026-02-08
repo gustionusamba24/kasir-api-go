@@ -16,6 +16,9 @@ type ProductService interface {
 	// GetByCategoryID retrieves all products by category ID
 	GetByCategoryID(ctx context.Context, categoryID int) ([]dtos.ProductDto, error)
 
+	// Search searches products by name and active status
+	Search(ctx context.Context, name string, active *bool) ([]dtos.ProductDto, error)
+
 	// Create creates a new product
 	Create(ctx context.Context, dto *dtos.ProductCreateRequestDto) (*dtos.ProductDto, error)
 

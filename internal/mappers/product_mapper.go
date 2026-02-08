@@ -28,6 +28,7 @@ func (m *ProductMapper) ToDto(product *entities.Product) *dtos.ProductDto {
 		Name:       product.Name,
 		Price:      product.Price,
 		Stock:      product.Stock,
+		Active:     product.Active,
 		CategoryID: product.CategoryID,
 		CreatedAt:  product.CreatedAt,
 		UpdatedAt:  product.UpdatedAt,
@@ -60,10 +61,16 @@ func (m *ProductMapper) ToCreateRequest(dto *dtos.ProductCreateRequestDto) *dtos
 		return nil
 	}
 
+	active := true // Default value if not provided
+	if dto.Active != nil {
+		active = *dto.Active
+	}
+
 	return &dtos.ProductCreateRequest{
 		Name:       dto.Name,
 		Price:      dto.Price,
 		Stock:      dto.Stock,
+		Active:     active,
 		CategoryID: dto.CategoryID,
 	}
 }
@@ -78,10 +85,16 @@ func (m *ProductMapper) ToUpdateRequest(dto *dtos.ProductUpdateRequestDto) *dtos
 		return nil
 	}
 
+	active := true // Default value if not provided
+	if dto.Active != nil {
+		active = *dto.Active
+	}
+
 	return &dtos.ProductUpdateRequest{
 		Name:       dto.Name,
 		Price:      dto.Price,
 		Stock:      dto.Stock,
+		Active:     active,
 		CategoryID: dto.CategoryID,
 	}
 }
@@ -97,6 +110,7 @@ func (m *ProductMapper) ToEntity(request *dtos.ProductCreateRequest) *entities.P
 		Name:       request.Name,
 		Price:      request.Price,
 		Stock:      request.Stock,
+		Active:     request.Active,
 		CategoryID: request.CategoryID,
 		CreatedAt:  now,
 		UpdatedAt:  now,
@@ -112,6 +126,7 @@ func (m *ProductMapper) UpdateEntity(product *entities.Product, request *dtos.Pr
 	product.Name = request.Name
 	product.Price = request.Price
 	product.Stock = request.Stock
+	product.Active = request.Active
 	product.CategoryID = request.CategoryID
 	product.UpdatedAt = time.Now()
 }

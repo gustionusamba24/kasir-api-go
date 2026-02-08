@@ -270,7 +270,7 @@ const docTemplate = `{
         },
         "/products": {
             "get": {
-                "description": "Retrieve a list of all products, optionally filtered by category ID",
+                "description": "Retrieve a list of all products, optionally filtered by category ID, name, or active status",
                 "consumes": [
                     "application/json"
                 ],
@@ -287,6 +287,18 @@ const docTemplate = `{
                         "description": "Filter by Category ID",
                         "name": "category_id",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by product name (case-insensitive partial match)",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Filter by active status",
+                        "name": "active",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -298,7 +310,7 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "invalid category ID",
+                        "description": "invalid parameter",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -586,6 +598,9 @@ const docTemplate = `{
                 "stock"
             ],
             "properties": {
+                "active": {
+                    "type": "boolean"
+                },
                 "category_id": {
                     "type": "integer"
                 },
@@ -611,6 +626,9 @@ const docTemplate = `{
                 "stock"
             ],
             "properties": {
+                "active": {
+                    "type": "boolean"
+                },
                 "category_id": {
                     "type": "integer"
                 },

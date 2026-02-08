@@ -148,6 +148,9 @@ func main() {
     },
     "products": {
       "getAll": "GET http://localhost:%s/products",
+      "searchByName": "GET http://localhost:%s/products?name={search_term}",
+      "filterByActive": "GET http://localhost:%s/products?active={true|false}",
+      "searchWithFilters": "GET http://localhost:%s/products?name={search_term}&active={true|false}",
       "getByCategory": "GET http://localhost:%s/products?category_id={id}",
       "getById": "GET http://localhost:%s/products/{id}",
       "create": "POST http://localhost:%s/products",
@@ -155,7 +158,7 @@ func main() {
       "delete": "DELETE http://localhost:%s/products/{id}"
     }
   }
-}`, port, port, port, port, port, port, port, port, port, port, port, port)
+}`, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port)
 
 		fmt.Fprint(w, response)
 	})

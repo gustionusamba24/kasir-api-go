@@ -26,6 +26,8 @@ definitions:
     type: object
   dtos.ProductCreateRequestDto:
     properties:
+      active:
+        type: boolean
       category_id:
         type: integer
       name:
@@ -44,6 +46,8 @@ definitions:
     type: object
   dtos.ProductUpdateRequestDto:
     properties:
+      active:
+        type: boolean
       category_id:
         type: integer
       name:
@@ -247,12 +251,20 @@ paths:
       consumes:
       - application/json
       description: Retrieve a list of all products, optionally filtered by category
-        ID
+        ID, name, or active status
       parameters:
       - description: Filter by Category ID
         in: query
         name: category_id
         type: integer
+      - description: Search by product name (case-insensitive partial match)
+        in: query
+        name: name
+        type: string
+      - description: Filter by active status
+        in: query
+        name: active
+        type: boolean
       produces:
       - application/json
       responses:
@@ -262,7 +274,7 @@ paths:
             additionalProperties: true
             type: object
         "400":
-          description: invalid category ID
+          description: invalid parameter
           schema:
             additionalProperties: true
             type: object

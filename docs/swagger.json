@@ -268,7 +268,7 @@
         },
         "/products": {
             "get": {
-                "description": "Retrieve a list of all products, optionally filtered by category ID",
+                "description": "Retrieve a list of all products, optionally filtered by category ID, name, or active status",
                 "consumes": [
                     "application/json"
                 ],
@@ -285,6 +285,18 @@
                         "description": "Filter by Category ID",
                         "name": "category_id",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by product name (case-insensitive partial match)",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Filter by active status",
+                        "name": "active",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -296,7 +308,7 @@
                         }
                     },
                     "400": {
-                        "description": "invalid category ID",
+                        "description": "invalid parameter",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -584,6 +596,9 @@
                 "stock"
             ],
             "properties": {
+                "active": {
+                    "type": "boolean"
+                },
                 "category_id": {
                     "type": "integer"
                 },
@@ -609,6 +624,9 @@
                 "stock"
             ],
             "properties": {
+                "active": {
+                    "type": "boolean"
+                },
                 "category_id": {
                     "type": "integer"
                 },
