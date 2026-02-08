@@ -53,14 +53,17 @@ func main() {
 	// Initialize repositories
 	categoryRepo := impl.NewCategoryRepository(db)
 	productRepo := impl.NewProductRepository(db)
+	transactionRepo := impl.NewTransactionRepository(db)
 
 	// Initialize services
 	categoryService := serviceImpl.NewCategoryService(categoryRepo)
 	productService := serviceImpl.NewProductService(productRepo, categoryRepo)
+	transactionService := serviceImpl.NewTransactionService(transactionRepo, productRepo)
 
 	// Initialize controllers
 	categoryController := controllers.NewCategoryController(categoryService)
 	productController := controllers.NewProductController(productService)
+	transactionController := controllers.NewTransactionController(transactionService)
 
 	// Setup routes
 	mux := http.NewServeMux()
@@ -115,6 +118,31 @@ func main() {
 		}
 	})
 
+	// Transaction routes
+	mux.HandleFunc("/transactions/checkout", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodPost {
+			transactionController.Checkout(w, r)
+		} else {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
+
+	mux.HandleFunc("/transactions", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			transactionController.GetAll(w, r)
+		} else {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
+
+	mux.HandleFunc("/transactions/", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			transactionController.GetByID(w, r)
+		} else {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
+
 	// Swagger documentation route
 	mux.HandleFunc("/swagger/", httpSwagger.WrapHandler)
 
@@ -156,9 +184,14 @@ func main() {
       "create": "POST http://localhost:%s/products",
       "update": "PUT http://localhost:%s/products/{id}",
       "delete": "DELETE http://localhost:%s/products/{id}"
+    },
+    "transactions": {
+      "checkout": "POST http://localhost:%s/transactions/checkout",
+      "getAll": "GET http://localhost:%s/transactions",
+      "getById": "GET http://localhost:%s/transactions/{id}"
     }
   }
-}`, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port)
+}`, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port)
 
 		fmt.Fprint(w, response)
 	})

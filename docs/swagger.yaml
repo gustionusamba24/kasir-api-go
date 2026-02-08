@@ -24,6 +24,16 @@ definitions:
     required:
     - name
     type: object
+  dtos.CheckoutItemDto:
+    properties:
+      product_id:
+        type: integer
+      quantity:
+        type: integer
+    required:
+    - product_id
+    - quantity
+    type: object
   dtos.ProductCreateRequestDto:
     properties:
       active:
@@ -63,6 +73,16 @@ definitions:
     - name
     - price
     - stock
+    type: object
+  dtos.TransactionCreateRequestDto:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/dtos.CheckoutItemDto'
+        minItems: 1
+        type: array
+    required:
+    - items
     type: object
 host: localhost:8080
 info:
@@ -443,6 +463,102 @@ paths:
       summary: Update a product
       tags:
       - products
+  /transactions:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of all transactions with their details
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success response with transactions data
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get all transactions
+      tags:
+      - transactions
+  /transactions/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a single transaction by its ID with details
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success response with transaction data
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: invalid transaction ID
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: transaction not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get a transaction by ID
+      tags:
+      - transactions
+  /transactions/checkout:
+    post:
+      consumes:
+      - application/json
+      description: Create a new transaction with multiple products
+      parameters:
+      - description: Checkout request with items
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.TransactionCreateRequestDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: success response with transaction data
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: product not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new transaction (checkout)
+      tags:
+      - transactions
 schemes:
 - http
 - https
