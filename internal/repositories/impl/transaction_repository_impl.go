@@ -184,3 +184,54 @@ func (r *transactionRepositoryImpl) CreateDetail(ctx context.Context, detail *en
 	}
 	return nil
 }
+
+func (r *transactionRepositoryImpl) GetTodayRevenue(ctx context.Context) (int, error) {
+	query := `
+		SELECT COALESCE(SUM(total_amount), 0) 
+		FROM transactions 
+		WHERE DATE(created_at) = CURRENT_DATE
+	`
+	var totalRevenue int
+	err := r.db.QueryRowContext(ctx, query).Scan(&totalRevenue)
+	if err != nil {
+		return 0, fmt.Errorf("failed to get today's revenue: %w", err)
+	}
+	return totalRevenue, nil
+}
+
+func (r *transactionRepositoryImpl) GetTodayTransactionCount(ctx context.Context) (int, error) {
+	query := `
+		SELECT COUNT(*) 
+		FROM transactions 
+		WHERE DATE(created_at) = CURRENT_DATE
+	`
+	var count int
+	err := r.db.QueryRowContext(ctx, query).Scan(&count)
+	if err != nil {
+		return 0, fmt.Errorf("failed to get today's transaction count: %w", err)
+	}
+	return count, nil
+}
+
+func (r *transactionRepositoryImpl) GetTodayBestSellingProduct(ctx context.Context) (string, int, error) {
+	query := `
+		SELECT p.name, SUM(td.quantity) as total_qty
+		FROM transaction_details td
+		JOIN transactions t ON td.transaction_id = t.id
+		JOIN products p ON td.product_id = p.id
+		WHERE DATE(t.created_at) = CURRENT_DATE
+		GROUP BY p.id, p.name
+		ORDER BY total_qty DESC
+		LIMIT 1
+	`
+	var productName string
+	var qtySold int
+	err := r.db.QueryRowContext(ctx, query).Scan(&productName, &qtySold)
+	if err == sql.ErrNoRows {
+		return "", 0, nil
+	}
+	if err != nil {
+		return "", 0, fmt.Errorf("failed to get today's best selling product: %w", err)
+	}
+	return productName, qtySold, nil
+}

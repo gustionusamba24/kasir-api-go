@@ -463,6 +463,28 @@ paths:
       summary: Update a product
       tags:
       - products
+  /report/today:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve today's transaction report including total revenue, transaction
+        count, and best selling product
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success response with today's report data
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get today's transaction report
+      tags:
+      - reports
   /transactions:
     get:
       consumes:

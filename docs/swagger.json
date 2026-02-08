@@ -552,6 +552,37 @@
                 }
             }
         },
+        "/report/today": {
+            "get": {
+                "description": "Retrieve today's transaction report including total revenue, transaction count, and best selling product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "reports"
+                ],
+                "summary": "Get today's transaction report",
+                "responses": {
+                    "200": {
+                        "description": "success response with today's report data",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
         "/transactions": {
             "get": {
                 "description": "Retrieve a list of all transactions with their details",

@@ -18,4 +18,13 @@ type TransactionRepository interface {
 	
 	// CreateDetail creates a transaction detail
 	CreateDetail(ctx context.Context, detail *entities.TransactionDetail) error
+	
+	// GetTodayRevenue returns the total revenue from today's transactions
+	GetTodayRevenue(ctx context.Context) (int, error)
+	
+	// GetTodayTransactionCount returns the count of transactions made today
+	GetTodayTransactionCount(ctx context.Context) (int, error)
+	
+	// GetTodayBestSellingProduct returns the product name and quantity sold for today's best selling product
+	GetTodayBestSellingProduct(ctx context.Context) (productName string, qtySold int, err error)
 }

@@ -59,11 +59,13 @@ func main() {
 	categoryService := serviceImpl.NewCategoryService(categoryRepo)
 	productService := serviceImpl.NewProductService(productRepo, categoryRepo)
 	transactionService := serviceImpl.NewTransactionService(transactionRepo, productRepo)
+	reportService := serviceImpl.NewReportService(transactionRepo)
 
 	// Initialize controllers
 	categoryController := controllers.NewCategoryController(categoryService)
 	productController := controllers.NewProductController(productService)
 	transactionController := controllers.NewTransactionController(transactionService)
+	reportController := controllers.NewReportController(reportService)
 
 	// Setup routes
 	mux := http.NewServeMux()
@@ -143,6 +145,15 @@ func main() {
 		}
 	})
 
+	// Report routes
+	mux.HandleFunc("/report/today", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			reportController.GetTodayReport(w, r)
+		} else {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
+
 	// Swagger documentation route
 	mux.HandleFunc("/swagger/", httpSwagger.WrapHandler)
 
@@ -189,9 +200,12 @@ func main() {
       "checkout": "POST http://localhost:%s/transactions/checkout",
       "getAll": "GET http://localhost:%s/transactions",
       "getById": "GET http://localhost:%s/transactions/{id}"
+    },
+    "reports": {
+      "todayReport": "GET http://localhost:%s/report/today"
     }
   }
-}`, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port)
+}`, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port)
 
 		fmt.Fprint(w, response)
 	})
