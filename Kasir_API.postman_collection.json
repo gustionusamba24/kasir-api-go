@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "kasir-api-collection",
     "name": "Kasir API - POS System",
-    "description": "Complete API collection for Kasir POS System with CRUD operations for Categories, Products, and Transactions",
+    "description": "Complete API collection for Kasir POS System with CRUD operations for Categories, Products, Transactions, and Daily Reports",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -388,6 +388,25 @@
         }
       ],
       "description": "Operations for creating and retrieving transactions. Transactions automatically handle stock updates and price calculations."
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Get Today Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/report/today",
+              "host": ["{{base_url}}"],
+              "path": ["report", "today"]
+            },
+            "description": "Get today's transaction report including total revenue, transaction count, and best selling product"
+          }
+        }
+      ],
+      "description": "Daily reports and analytics for today's transactions including revenue, transaction count, and best selling products."
     }
   ],
   "variable": [
