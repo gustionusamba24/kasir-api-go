@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "kasir-api-collection",
     "name": "Kasir API - POS System",
-    "description": "Complete API collection for Kasir POS System with CRUD operations for Categories and Products",
+    "description": "Complete API collection for Kasir POS System with CRUD operations for Categories, Products, and Transactions",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -132,6 +132,71 @@
           }
         },
         {
+          "name": "Search Products by Name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products?name=hand",
+              "host": ["{{base_url}}"],
+              "path": ["products"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "hand",
+                  "description": "Search products by name (case-insensitive partial match)"
+                }
+              ]
+            },
+            "description": "Search products by name with partial matching"
+          }
+        },
+        {
+          "name": "Filter Products by Active Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products?active=true",
+              "host": ["{{base_url}}"],
+              "path": ["products"],
+              "query": [
+                {
+                  "key": "active",
+                  "value": "true",
+                  "description": "Filter by active status (true/false)"
+                }
+              ]
+            },
+            "description": "Filter products by their active status"
+          }
+        },
+        {
+          "name": "Search Products with Multiple Filters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products?name=laptop&active=true",
+              "host": ["{{base_url}}"],
+              "path": ["products"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "laptop",
+                  "description": "Search by product name"
+                },
+                {
+                  "key": "active",
+                  "value": "true",
+                  "description": "Filter by active status"
+                }
+              ]
+            },
+            "description": "Combine name search and active filter"
+          }
+        },
+        {
           "name": "Get Product by ID",
           "request": {
             "method": "GET",
@@ -156,7 +221,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Mechanical Keyboard\",\n  \"price\": 850000,\n  \"stock\": 20,\n  \"category_id\": 1\n}"
+              "raw": "{\n  \"name\": \"Mechanical Keyboard\",\n  \"price\": 850000,\n  \"stock\": 20,\n  \"active\": true,\n  \"category_id\": 1\n}"
             },
             "url": {
               "raw": "{{base_url}}/products",
@@ -178,7 +243,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Mystery Box\",\n  \"price\": 150000,\n  \"stock\": 10,\n  \"category_id\": null\n}"
+              "raw": "{\n  \"name\": \"Mystery Box\",\n  \"price\": 150000,\n  \"stock\": 10,\n  \"active\": true,\n  \"category_id\": null\n}"
             },
             "url": {
               "raw": "{{base_url}}/products",
@@ -200,7 +265,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Laptop HP 14\\\" Updated\",\n  \"price\": 7200000,\n  \"stock\": 12,\n  \"category_id\": 1\n}"
+              "raw": "{\n  \"name\": \"Laptop HP 14\\\" Updated\",\n  \"price\": 7200000,\n  \"stock\": 12,\n  \"active\": true,\n  \"category_id\": 1\n}"
             },
             "url": {
               "raw": "{{base_url}}/products/1",
@@ -225,6 +290,104 @@
         }
       ],
       "description": "CRUD operations for managing products"
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "Checkout - Create Transaction",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"product_id\": 1,\n      \"quantity\": 2\n    },\n    {\n      \"product_id\": 3,\n      \"quantity\": 1\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/transactions/checkout",
+              "host": ["{{base_url}}"],
+              "path": ["transactions", "checkout"]
+            },
+            "description": "Create a new transaction (checkout). Automatically calculates total, validates products, checks stock, and updates stock levels."
+          }
+        },
+        {
+          "name": "Checkout - Single Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"product_id\": 5,\n      \"quantity\": 3\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/transactions/checkout",
+              "host": ["{{base_url}}"],
+              "path": ["transactions", "checkout"]
+            },
+            "description": "Create a transaction with a single product"
+          }
+        },
+        {
+          "name": "Checkout - Multiple Items",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"product_id\": 1,\n      \"quantity\": 1\n    },\n    {\n      \"product_id\": 2,\n      \"quantity\": 5\n    },\n    {\n      \"product_id\": 4,\n      \"quantity\": 2\n    },\n    {\n      \"product_id\": 6,\n      \"quantity\": 10\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/transactions/checkout",
+              "host": ["{{base_url}}"],
+              "path": ["transactions", "checkout"]
+            },
+            "description": "Create a transaction with multiple products (bulk purchase)"
+          }
+        },
+        {
+          "name": "Get All Transactions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/transactions",
+              "host": ["{{base_url}}"],
+              "path": ["transactions"]
+            },
+            "description": "Retrieve a list of all transactions with their details"
+          }
+        },
+        {
+          "name": "Get Transaction by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/transactions/1",
+              "host": ["{{base_url}}"],
+              "path": ["transactions", "1"]
+            },
+            "description": "Retrieve a single transaction by its ID with complete details including product names"
+          }
+        }
+      ],
+      "description": "Operations for creating and retrieving transactions. Transactions automatically handle stock updates and price calculations."
     }
   ],
   "variable": [
