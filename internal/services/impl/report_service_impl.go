@@ -54,3 +54,41 @@ func (s *reportServiceImpl) GetTodayReport(ctx context.Context) (*dtos.TodayRepo
 
 	return report, nil
 }
+
+func (s *reportServiceImpl) GetDateRangeReport(ctx context.Context, startDate, endDate string) (*dtos.DateRangeReportDto, error) {
+	// Get date range total revenue
+	totalRevenue, err := s.transactionRepository.GetDateRangeRevenue(ctx, startDate, endDate)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get date range revenue: %w", err)
+	}
+
+	// Get date range transaction count
+	totalTransactions, err := s.transactionRepository.GetDateRangeTransactionCount(ctx, startDate, endDate)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get date range transaction count: %w", err)
+	}
+
+	// Get date range best selling product
+	productName, qtySold, err := s.transactionRepository.GetDateRangeBestSellingProduct(ctx, startDate, endDate)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get date range best selling product: %w", err)
+	}
+
+	// Build report DTO
+	report := &dtos.DateRangeReportDto{
+		StartDate:         startDate,
+		EndDate:           endDate,
+		TotalRevenue:      totalRevenue,
+		TotalTransactions: totalTransactions,
+	}
+
+	// Only add best selling product if there are transactions in the date range
+	if productName != "" {
+		report.BestSellingProduct = &dtos.BestSellingProductDto{
+			Name:    productName,
+			QtySold: qtySold,
+		}
+	}
+
+	return report, nil
+}

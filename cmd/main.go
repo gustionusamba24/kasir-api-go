@@ -154,6 +154,14 @@ func main() {
 		}
 	})
 
+	mux.HandleFunc("/report", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			reportController.GetDateRangeReport(w, r)
+		} else {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
+
 	// Swagger documentation route
 	mux.HandleFunc("/swagger/", httpSwagger.WrapHandler)
 
@@ -202,10 +210,11 @@ func main() {
       "getById": "GET http://localhost:%s/transactions/{id}"
     },
     "reports": {
-      "todayReport": "GET http://localhost:%s/report/today"
+      "todayReport": "GET http://localhost:%s/report/today",
+      "dateRangeReport": "GET http://localhost:%s/report?start_date={YYYY-MM-DD}&end_date={YYYY-MM-DD}"
     }
   }
-}`, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port)
+}`, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port, port)
 
 		fmt.Fprint(w, response)
 	})

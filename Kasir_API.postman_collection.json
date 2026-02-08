@@ -404,6 +404,31 @@
             },
             "description": "Get today's transaction report including total revenue, transaction count, and best selling product"
           }
+        },
+        {
+          "name": "Get Date Range Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/report?start_date=2026-01-01&end_date=2026-02-01",
+              "host": ["{{base_url}}"],
+              "path": ["report"],
+              "query": [
+                {
+                  "key": "start_date",
+                  "value": "2026-01-01",
+                  "description": "Start date in YYYY-MM-DD format"
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-02-01",
+                  "description": "End date in YYYY-MM-DD format"
+                }
+              ]
+            },
+            "description": "Get transaction report for a specific date range including total revenue, transaction count, and best selling product"
+          }
         }
       ],
       "description": "Daily reports and analytics for today's transactions including revenue, transaction count, and best selling products."

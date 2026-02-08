@@ -27,4 +27,13 @@ type TransactionRepository interface {
 	
 	// GetTodayBestSellingProduct returns the product name and quantity sold for today's best selling product
 	GetTodayBestSellingProduct(ctx context.Context) (productName string, qtySold int, err error)
+	
+	// GetDateRangeRevenue returns the total revenue from transactions within a date range
+	GetDateRangeRevenue(ctx context.Context, startDate, endDate string) (int, error)
+	
+	// GetDateRangeTransactionCount returns the count of transactions within a date range
+	GetDateRangeTransactionCount(ctx context.Context, startDate, endDate string) (int, error)
+	
+	// GetDateRangeBestSellingProduct returns the product name and quantity sold for best selling product within a date range
+	GetDateRangeBestSellingProduct(ctx context.Context, startDate, endDate string) (productName string, qtySold int, err error)
 }

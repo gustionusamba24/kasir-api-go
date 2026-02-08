@@ -10,6 +10,7 @@ Kasir API is a backend service designed for point of sale applications. It provi
 - **PostgreSQL Database**: Reliable data persistence with PostgreSQL
 - **Advanced Product Search**: Search by name with partial matching and filter by active status
 - **Transaction Management**: Complete checkout system with automatic stock updates
+- **Reports & Analytics**: Daily and date range transaction reports with revenue tracking and best selling products
 - **Inventory Tracking**: Real-time stock management with product availability checks
 - **Swagger Documentation**: Interactive API documentation with Swagger UI
 - **Clean Architecture**: Organized codebase following separation of concerns
@@ -211,6 +212,53 @@ Kasir API is a backend service designed for point of sale applications. It provi
 - **Response**:
   - 200 OK with transaction data including all line items
   - 404 Not Found if transaction doesn't exist
+
+### Reports API
+
+#### Get Today's Report
+
+- **Endpoint**: `GET /report/today`
+- **Description**: Retrieve today's transaction report including total revenue, transaction count, and best selling product
+- **Response**: 200 OK with today's report data
+  ```json
+  {
+    "success": true,
+    "data": {
+      "total_revenue": 150000,
+      "total_transactions": 5,
+      "best_selling_product": {
+        "name": "Product Name",
+        "qty_sold": 10
+      }
+    }
+  }
+  ```
+
+#### Get Date Range Report
+
+- **Endpoint**: `GET /report?start_date={YYYY-MM-DD}&end_date={YYYY-MM-DD}`
+- **Description**: Retrieve transaction report for a specific date range including total revenue, transaction count, and best selling product
+- **Query Parameters**:
+  - `start_date` (required) - Start date in YYYY-MM-DD format
+  - `end_date` (required) - End date in YYYY-MM-DD format
+- **Example**: `GET /report?start_date=2026-01-01&end_date=2026-02-01`
+- **Response**: 200 OK with date range report data
+  ```json
+  {
+    "success": true,
+    "data": {
+      "start_date": "2026-01-01",
+      "end_date": "2026-02-01",
+      "total_revenue": 500000,
+      "total_transactions": 25,
+      "best_selling_product": {
+        "name": "Product Name",
+        "qty_sold": 50
+      }
+    }
+  }
+  ```
+- **Response**: 400 Bad Request if start_date or end_date is missing
 
 ### Response Format
 
@@ -668,20 +716,33 @@ For detailed Swagger documentation guide, see [SWAGGER.md](SWAGGER.md)
 - **Transaction History**: View all past transactions with complete details
 - **Detailed Reports**: Each transaction includes product names, quantities, and individual subtotals
 
-### 4. Category Management
+### 4. Reports & Analytics
+
+- **Today's Report**: Get real-time insights for current day's transactions
+  - Total revenue for today
+  - Count of transactions completed
+  - Best selling product with quantity sold
+- **Date Range Reports**: Historical transaction analysis for any date range
+  - Revenue tracking across custom periods
+  - Transaction volume analysis
+  - Best seller identification for specified dates
+- **Automated Calculations**: All reports generated automatically from transaction data
+- **Business Intelligence**: Make data-driven decisions with detailed sales analytics
+
+### 5. Category Management
 
 - **Hierarchical Organization**: Organize products into logical categories
 - **Flexible Assignment**: Products can belong to a category or remain uncategorized
 - **Easy Maintenance**: Simple CRUD operations for category management
 
-### 5. Data Integrity
+### 6. Data Integrity
 
 - **Database Transactions**: Uses SQL transactions for data consistency
 - **Foreign Key Constraints**: Maintains referential integrity
 - **Validation**: Input validation at multiple layers (DTO, service, repository)
 - **Error Handling**: Comprehensive error messages for debugging
 
-### 6. Developer Experience
+### 7. Developer Experience
 
 - **Swagger Documentation**: Interactive API testing and documentation
 - **Postman Collection**: Pre-configured API requests for quick testing

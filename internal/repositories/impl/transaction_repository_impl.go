@@ -235,3 +235,54 @@ func (r *transactionRepositoryImpl) GetTodayBestSellingProduct(ctx context.Conte
 	}
 	return productName, qtySold, nil
 }
+
+func (r *transactionRepositoryImpl) GetDateRangeRevenue(ctx context.Context, startDate, endDate string) (int, error) {
+	query := `
+		SELECT COALESCE(SUM(total_amount), 0) 
+		FROM transactions 
+		WHERE DATE(created_at) >= $1 AND DATE(created_at) <= $2
+	`
+	var totalRevenue int
+	err := r.db.QueryRowContext(ctx, query, startDate, endDate).Scan(&totalRevenue)
+	if err != nil {
+		return 0, fmt.Errorf("failed to get date range revenue: %w", err)
+	}
+	return totalRevenue, nil
+}
+
+func (r *transactionRepositoryImpl) GetDateRangeTransactionCount(ctx context.Context, startDate, endDate string) (int, error) {
+	query := `
+		SELECT COUNT(*) 
+		FROM transactions 
+		WHERE DATE(created_at) >= $1 AND DATE(created_at) <= $2
+	`
+	var count int
+	err := r.db.QueryRowContext(ctx, query, startDate, endDate).Scan(&count)
+	if err != nil {
+		return 0, fmt.Errorf("failed to get date range transaction count: %w", err)
+	}
+	return count, nil
+}
+
+func (r *transactionRepositoryImpl) GetDateRangeBestSellingProduct(ctx context.Context, startDate, endDate string) (string, int, error) {
+	query := `
+		SELECT p.name, SUM(td.quantity) as total_qty
+		FROM transaction_details td
+		JOIN transactions t ON td.transaction_id = t.id
+		JOIN products p ON td.product_id = p.id
+		WHERE DATE(t.created_at) >= $1 AND DATE(t.created_at) <= $2
+		GROUP BY p.id, p.name
+		ORDER BY total_qty DESC
+		LIMIT 1
+	`
+	var productName string
+	var qtySold int
+	err := r.db.QueryRowContext(ctx, query, startDate, endDate).Scan(&productName, &qtySold)
+	if err == sql.ErrNoRows {
+		return "", 0, nil
+	}
+	if err != nil {
+		return "", 0, fmt.Errorf("failed to get date range best selling product: %w", err)
+	}
+	return productName, qtySold, nil
+}
